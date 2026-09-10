@@ -77,10 +77,16 @@ docker run --rm -it -v $PWD:/module/ --volume=/dev/bus/usb:/dev/bus/usb --privil
 Com isso, o flash será feito e toda vez que alterado um programa que será utilizado apenas pelo sistema embarcado(drone) é necessário fazer o flash da aplicação novamente com o comando ``make clean all run``.
 
 ## Passo 6 - Wifi, Coletor de Fotos e Treinamento
+### Wifi
 Ainda com base na mesma página [Getting started with the AI deck](https://www.bitcraze.io/documentation/tutorials/getting-started-with-aideck/), agora na seção **_Flash Wifi Example_**, siga os passos para que consiga assim ligar a câmera do drone e transmitir sua imagem em tempo real para o Computador.
-Obeservação: a interface de imagem pode travar após alguns segundos depois de executar o programa `python opencv-viewer.py`, fazendo que tenha que reiniciar o drone para assim poder executar o programa novamente. Se esse problema continuar, talvez seja preciso alterar o protocolo de transporte TCP para UDP. Para isso, troquei fiz o programa de coleta de fotos utilizando UDP com base nessa discussão:[UDP](https://github.com/bitcraze/aideck-gap8-examples/issues/150).
-Para isso, você irá até a mensagem do gemenerik que começa com: ``@marijana23 from LARICS (University of Zagreb) was so kind to share their workaround in these forks:`` e fazer o que ele diz. De maneira resumida, será preciso baixar o repositório *aideck-esp-firmware-udp* e fazer o flash dele com o J-link. Dentro do repositório *aideck-esp-firmware-udp*, faça esse comando ``docker run --rm -it -v $PWD:/module/ --privileged -P bitcraze/builder /bin/bash -c "source /new_home/.espressif/python_env/idf4.3_py3.10_env/bin/activate && make"`` e depois fazer o flash via rádio com o comando ``cfloader flash build/aideck_esp.bin deck-bcAI:esp-fw -w radio://0/80/2M/E7E7E7E7E7`` . Caso depois que der 100% ficar travado por mais de 20s, pode dar Ctrl+C que não tem problema. Lembrando que se for necessário configurar o wifi, veja a as instruções na discussão.
+Obeservação: a interface de imagem pode travar após alguns segundos depois de executar o programa `python opencv-viewer.py`, fazendo que tenha que reiniciar o drone para assim poder executar o programa novamente. Se esse problema continuar, talvez seja preciso alterar o protocolo de transporte TCP para UDP. 
 
+**Obs:Se para você, após testar a câmera do drone e não travar utilizando TCP, pode pular para o _Pegar IP e Conda_**
+
+
+Para isso, troquei fiz o programa de coleta de fotos utilizando UDP com base nessa discussão:[UDP](https://github.com/bitcraze/aideck-gap8-examples/issues/150). Primeiro, você acessará a discussão linkada e irá até a mensagem do gemenerik que começa com: *_@marijana23 from LARICS (University of Zagreb) was so kind to share their workaround in these forks:_* e fazer o que ele diz. De maneira resumida, será preciso baixar o repositório *aideck-esp-firmware-udp* e fazer o flash dele com o J-link. Dentro do repositório *aideck-esp-firmware-udp*, faça esse comando ``docker run --rm -it -v $PWD:/module/ --privileged -P bitcraze/builder /bin/bash -c "source /new_home/.espressif/python_env/idf4.3_py3.10_env/bin/activate && make"`` e depois fazer o flash via rádio com o comando ``cfloader flash build/aideck_esp.bin deck-bcAI:esp-fw -w radio://0/80/2M/E7E7E7E7E7`` . Caso depois que der 100% ficar travado por mais de 20s, pode dar Ctrl+C que não tem problema. Lembrando que se for necessário configurar o wifi, veja a as instruções na discussão.
+
+### Pegar IP e Conda
 Após isso, ligue o drone, conecte ao ``WiFi streaming example``, abra um novo terminal linux e faça o comando ``ip route`` para saber qual é o IP do ESP32. A saída que tiver ``default via...`` é a que tem o IP, no caso é o primeiro que aparece - ex: ``default via 192.168.4.1 dev wlp0s20f3 proto dhcp src 192.168.4.2 metric 20600``, o IP do ESP será *192.168.4.1*. Guarde esse IP que será utilizado futuramente.
 
 Todavia, os programas de coleta e treinamento das fotos para o drone já estão feitos e estão na pasta `treinamento_drone`. Portanto, só será preciso baixar a pasta(caso não tenha baixado o repositório ainda):
@@ -98,6 +104,7 @@ python patch_nemo.py
 ```
 O último comando serve para corrigir alguns bugs de compatibilidade com o PyTorch que dão erro na hora de executar o ``treinamento.py``.
 
+### Coletor de Fotos e Treinamento
 Dessa forma, o ambiente será criado com a versão do python e os pacotes adequados para executar os programas. Antes de executá-los, é preciso trocar o local do ESP32_IP na linha 39, pelo IP que foi guardado anteriormente. Depois de trocá-lo execute primeiro o programa ``coletor_dataset_udp.py`` para tirar as fotos com a câmera do drone(o drone deve estar ligado e a crazyradio conectada à sua máquina). Recomendo tirar 300 fotos de cada comando.
 Exemplo de cada comando:
 1. Tecla ``0`` - Mão aberta
