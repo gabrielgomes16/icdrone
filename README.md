@@ -91,7 +91,7 @@ Após isso, ligue o drone, conecte ao ``WiFi streaming example``, abra um novo t
 
 Todavia, os programas de coleta e treinamento das fotos para o drone já estão feitos e estão na pasta `treinamento_drone`. Portanto, só será preciso baixar a pasta(caso não tenha baixado o repositório ainda):
 ```bash
-git clone treinamento_drone
+git clone https://github.com/gabrielgomes16/icdrone.git
 ```
 Beleza, após baixar a pasta será preciso primeiro baixar o *_Conda_*(ambiente virtual que será utilizado, pois teremos que utilizar uma outra versão do python), assim para baixar basta verificar a documentação e como instalar por meio desses links: [Instalação Conda](https://www.anaconda.com/docs/getting-started/miniconda/install/linux-install) e [Como utilizar o Conda](https://docs.conda.io/projects/conda/en/latest/user-guide/getting-started.html#managing-python).
 
