@@ -1,0 +1,5 @@
+dataset/
+test/
+cerebro_drone.onnx
+__pycache__/
+*.pyc

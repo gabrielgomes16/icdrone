@@ -1,0 +1,5 @@
+numpy==1.24.3
+opencv-contrib-python==4.9.0.80
+torch==1.13.1
+torchvision==0.14.1
+pytorch-nemo @ git+https://github.com/pulp-platform/nemo.git@5ea3338ae172f96e996bdf75a5dacdf795282929
